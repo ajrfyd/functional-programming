@@ -1,6 +1,6 @@
-const _each = (list, fn) => {
+const _each = (list, iter) => {
   for(let i in list) {
-    fn(list[i], i);
+    iter(list[i], i);
   }
 
   return list;
