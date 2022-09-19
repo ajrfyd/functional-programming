@@ -23,3 +23,19 @@ const _filter = (list, predi) => {
 
   return newArr;
 };
+
+// 필요한 인자가 채워지면 함수수 본체를 실행하는 함수
+const _curry = (fn) => {
+  return (...args) => {
+    return args.length === 2 
+      ? fn(...args)
+      : (b) => {
+        return fn(args[0], b);
+      }
+  }
+}
+
+const add = _curry((a, b) => a + b);
+
+console.log(add(15, 12));
+console.log(add(11)(24));
