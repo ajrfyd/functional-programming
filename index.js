@@ -1,41 +1,77 @@
-const _each = (list, iter) => {
-  for(let i in list) {
-    iter(list[i], i);
+const arr = [
+  {
+    id: 1,
+    name: 'ajrfyd',
+    age: 23
+  },
+  {
+    id: 2,
+    name: 'jun',
+    age: 40
+  },
+  {
+    id: 3,
+    name: 'july',
+    age: 32,
+  },
+  {
+    id: 4,
+    name: 'kile',
+    age: 33,
+  },
+  {
+    id: 5,
+    name: 'kite',
+    age: 29
+  },
+  {
+    id: 6,
+    name: 'noty',
+    age: 30
   }
+];
 
+function _each(list, itter) {
+  for(let i = 0; i < list.length; i++) {
+    itter(list[i]);
+  }
   return list;
 };
 
-const _map = (list, mapper) => {
+function _map(list, mapper) {
   const newArr = [];
-  _each(list, (v, i) => {
-    newArr.push(mapper(v, i));
-  });
+  _each(list, value => newArr.push(mapper(value)));
+  return newArr;
+};
+
+function _filter(list, itter) {
+  const newArr = [];
+  _each(list, v => itter(v) ? newArr.push(v) : null);
 
   return newArr;
 };
 
-const _filter = (list, predi) => {
-  const newArr = [];
-  _each(list, (value) => {
-    if(predi(value)) newArr.push(value);
-  });
-
-  return newArr;
+function _curry(fn) {
+  return (a, b) => a && b ? fn(a, b) : b => fn(a, b);
 };
 
-// 필요한 인자가 채워지면 함수수 본체를 실행하는 함수
-const _curry = (fn) => {
-  return (...args) => {
-    return args.length === 2 
-      ? fn(...args)
-      : (b) => {
-        return fn(args[0], b);
-      }
-  }
-}
+function _curryR(fn) {
+  return (a, b) => (a && b) ? fn(a, b) : b => fn(b, a);
+};
 
 const add = _curry((a, b) => a + b);
+const sub = _curryR((a, b) => b - a);
 
-console.log(add(15, 12));
-console.log(add(11)(24));
+console.log(add(10, 12));
+console.log(add(10)(12));
+console.log(sub(10)(20));
+console.log(sub(10, 20));
+
+const _mapR = _curryR(_map);
+
+console.log(_map(arr, v => v.name));
+
+console.log(_mapR(v => v.name)(arr));
+
+
+console.log(test(v => v)(1)(2));
