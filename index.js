@@ -31,9 +31,19 @@ const arr = [
   }
 ];
 
-function _each(list, itter) {
+const obj = {
+  id: 1,
+  name: 'Mr.Kim',
+  age: 32,
+  height: 180,
+  weight: 70,
+};
+
+console.clear();
+
+function _each(list, iter) {
   for(let i = 0; i < list.length; i++) {
-    itter(list[i]);
+    iter(list[i]);
   }
   return list;
 };
@@ -44,34 +54,80 @@ function _map(list, mapper) {
   return newArr;
 };
 
-function _filter(list, itter) {
+function _filter(list, iter) {
   const newArr = [];
-  _each(list, v => itter(v) ? newArr.push(v) : null);
+  _each(list, v => iter(v) ? newArr.push(v) : null);
 
   return newArr;
 };
 
 function _curry(fn) {
-  return (a, b) => a && b ? fn(a, b) : b => fn(a, b);
+  return (...args) => args.length === 2 ? fn(args[0], args[1]) : b => fn(args[0], b);
 };
 
 function _curryR(fn) {
-  return (a, b) => (a && b) ? fn(a, b) : b => fn(b, a);
+  return (...args) => args.length === 2 ? 
+    fn(args[0], args[1]) : 
+    (b) => fn(b, args[0]);
 };
 
 const add = _curry((a, b) => a + b);
 const sub = _curryR((a, b) => b - a);
 
-console.log(add(10, 12));
-console.log(add(10)(12));
-console.log(sub(10)(20));
-console.log(sub(10, 20));
+// console.log(add(10, 12));
+// console.log(add(10)(12));
+// console.log(sub(10)(20));
+// console.log(sub(10, 20));
 
 const _mapR = _curryR(_map);
+const _filterR = _curryR(_filter);
 
-console.log(_map(arr, v => v.name));
+function _get(obj, key) {
+  return obj === null ? undefined : obj[key];
+};
 
-console.log(_mapR(v => v.name)(arr));
+const { slice } = Array.prototype;
 
+function _rest(list, num) {
+  return slice.call(list, num || 1);
+};
 
-console.log(test(v => v)(1)(2));
+function _reduce(list, iter, memo) {
+  if(arguments.length === 2) {
+    memo = list[0];
+    list = _rest(list);
+  }
+  _each(list, (value) => {
+    memo = iter(memo, value);
+  });
+
+  return memo;
+};
+
+_get = _curryR(_get);
+
+const _length = _get('length');
+
+function _is_object(obj) {
+  return typeof obj === 'object' && !!obj;
+};
+
+function _keys(obj) {
+  return _is_object(obj) ? Object.keys(obj) : [];
+};
+
+function _pipe() {
+  const fns = arguments;
+  // return function(arg) {
+  //   return _reduce(fns, function(arg, fn) {
+  //     return fn(arg);
+  //   }, arg)
+  // };
+  return (arg) => _reduce(fns, (arg, fn) => fn(arg), arg);
+};
+
+const f1 = _pipe(
+  a => a * a,
+  a => a ** a,
+  console.log
+);

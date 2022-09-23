@@ -5,3 +5,9 @@ Practice of Functional Programming
 ### _map
 ### _filter
 ### _curry
+### _curryR
+### _reduce
+### _get
+### _rest
+### _is_object
+### _keys
