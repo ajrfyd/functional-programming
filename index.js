@@ -131,3 +131,8 @@ const f1 = _pipe(
   a => a ** a,
   console.log
 );
+
+function _go(arg) {
+  const fns = _rest(arguments);
+return _pipe.apply(null, fns)(arg);
+};
