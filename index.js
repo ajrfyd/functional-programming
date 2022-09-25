@@ -41,9 +41,14 @@ const obj = {
 
 console.clear();
 
+_get = _curryR(_get);
+
+const _length = _get('length');
+
 function _each(list, iter) {
-  for(let i = 0; i < list.length; i++) {
-    iter(list[i]);
+  const keys = _keys(list);
+  for(let i = 0, leng = keys.length; i < leng; i++) {
+    iter(list[keys[i]]);
   }
   return list;
 };
@@ -104,9 +109,8 @@ function _reduce(list, iter, memo) {
   return memo;
 };
 
-_get = _curryR(_get);
 
-const _length = _get('length');
+
 
 function _is_object(obj) {
   return typeof obj === 'object' && !!obj;
@@ -132,7 +136,31 @@ const f1 = _pipe(
   console.log
 );
 
+
 function _go(arg) {
   const fns = _rest(arguments);
-return _pipe.apply(null, fns)(arg);
+  return _pipe.apply(null, fns)(arg);
 };
+
+const f2 = _go(
+  arr,
+  _filterR(v => v.age > 30),
+  _mapR(_get('name')),
+  console.log
+);
+
+
+_each(null, console.log);
+console.log(_map(null, v => v.name));
+
+
+function _keys(obj) {
+  return _is_object(obj) ? Object.keys(obj) : [];
+}
+
+_each({
+  13: 'asd',
+  14: 'adzxf',
+  156: 'sdtsgt'
+},
+v => console.log(v))
